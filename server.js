@@ -1,87 +1,45 @@
 
 // http://expressjs.com/api.html
 
-var express = require('express');
-var app = express();
-
+var express    = require('express');
+var app        = express();
 var bodyParser = require('body-parser');
+var mongoose   = require('mongoose');
+var path       = require('path');
+var controller = require('./server-controller');
+var port       = process.env.PORT || 8080;
+
+// connect to database
+
+mongoose.connect('mongodb://localhost:27017/Tasker');
+
+// Pre-load the database with some cool stuff!
+require('./populate-database');
+
+// middleware
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/test');
+// serve static web content from the /www folder
 
-var Task = require('./schemas/models').Task;
-var User = require('./schemas/models').User;
-var Project = require('./schemas/models').Project;
+app.use(express.static(path.join(__dirname, '/www')));
 
+// set up routes
 
-app.get('/', function(req, res){
-	res.json('Tasker api');
-});
+app.get('/tasks', controller.tasks);
+app.get('/tasksPopulate', controller.tasksPopulate);
+app.post('/tasks', controller.createTask);
 
-app.get('/tasks', function(req, res){
-	Task.find(function(err, tasks){
-  		if (err){
-  			console.log(err);
-  			res.json(err);
-  		}
-  		res.json(tasks);
-  	});
-});
+app.get('/users', controller.users);
+app.post('/users', controller.createUser);
 
-app.post('/tasks', function(req, res){
-	console.log(req);
-	console.log(req.body);
-	var task = new Task(req.body);
-  	task.save(function(err, savedTask){
-  		if (err){
-  			console.log(err);
-  			res.json(err);
-  		}
-  		res.json(savedTask);	
-  	});
-});
+app.get('/projects', controller.projects);
+app.post('/projects', controller.createProject);
 
 
+// listen for connections
 
-app.get('/users', function(req, res){
-	User.find(function(err, users){
-		if (err){
-  			console.log(err);
-  			res.json(err);
-  		}
-		res.json(users);
-	});
-});
+app.listen(port);
 
-app.post('/users', function(req, res){
-	var user = new User(req.body);
-  	user.save(function(err, savedUser){
-  		if (err){
-  			console.log(err);
-  			res.json(err);
-  		}
-  		res.json(savedUser);
-  	});
-});
-
-
-
-app.get('/projects', function(req, res){
-	Project.find(function(err, projects){
-		if (err){
-  			console.log(err);
-  			res.json(err);
-  		}
-		res.json(projects);
-	});
-});
-
-app.post('/projects', function(req, res){
-
-});
-
-app.listen(3000);
-console.log('server started');
+console.log('server started on port %d', port);

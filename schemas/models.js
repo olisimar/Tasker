@@ -18,7 +18,7 @@ var userSchema = Schema({
   email         : String,
   password      : String,
   description   : String,
-  projects      : [{ type: Schema.Types.ObjectId, ref: 'Project' }]
+  projects      : [{ type: Schema.Types.ObjectId, ref: 'Project' }] 
 });
 
 var taskSchema = Schema({
@@ -32,8 +32,8 @@ var taskSchema = Schema({
   endDate       : Date,
   estimate      : Number,
   actual        : Number,
-  parent        :  { type: Schema.Types.ObjectId, ref: 'Task' },
-  children      : [Task],
+  parent        : { type: Schema.Types.ObjectId, ref: 'Task' },
+  children      : [{ type: Schema.Types.ObjectId, ref: 'Task' }],
   todos         : [String]
 });
 
