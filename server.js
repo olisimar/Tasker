@@ -27,6 +27,8 @@ app.use(express.static(path.join(__dirname, '/www')));
 
 // set up routes
 
+app.get('/tree', controller.binarytree);
+
 app.get('/tasks', controller.tasks);
 app.get('/tasksPopulate', controller.tasksPopulate);
 app.post('/tasks', controller.createTask);
