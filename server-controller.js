@@ -4,7 +4,8 @@ var Project = require('./schemas/models').Project;
 
 var treeGenerator = require('./tree-generator');
 
-exports.binarytree = function (req, res) {
+//
+exports.randomTree = function (req, res) {
   res.json(treeGenerator.createRandomTree(0, null));
 };
 

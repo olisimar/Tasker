@@ -27,7 +27,8 @@ app.use(express.static(path.join(__dirname, '/www')));
 
 // set up routes
 
-app.get('/tree', controller.binarytree);
+// random generated tree
+app.get('/tree', controller.randomTree);
 
 app.get('/tasks', controller.tasks);
 app.get('/tasksPopulate', controller.tasksPopulate);
